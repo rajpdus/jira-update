@@ -1,0 +1,113 @@
+# JIRA Update Hook Configuration
+
+# JIRA Connection Settings
+jira:
+  url: "https://your-domain.atlassian.net"
+  # Authentication options (choose one):
+  # Option 1: Basic authentication (username/password or email/token)
+  auth_method: "basic"
+  username: "your_email@example.com"
+  # Use API token for Atlassian Cloud: https://id.atlassian.com/manage-profile/security/api-tokens
+  password: "your_api_token"
+  
+  # Option 2: OAuth authentication
+  # auth_method: "oauth"
+  # oauth:
+  #   access_token: "your_access_token"
+  #   access_token_secret: "your_access_token_secret"
+  #   consumer_key: "your_consumer_key"
+  #   key_cert: "/path/to/your/oauth_key.pem"
+
+# Project Settings
+project:
+  # List of JIRA project keys to monitor
+  keys: ["PROJ", "TEST"]
+  
+  # Regular expression to extract JIRA ticket IDs from commit messages
+  # Default matches patterns like "PROJ-123" or "Fixes TEST-456"
+  ticket_pattern: "([A-Z]+-\\d+)"
+
+# Git Settings
+git:
+  # Maximum number of commits to analyze in a single push
+  max_commits: 10
+  
+  # Whether to analyze merge commits
+  analyze_merges: false
+  
+  # File patterns to ignore in analysis
+  ignore_patterns:
+    - "*.md"
+    - "*.txt"
+    - ".gitignore"
+    - "package-lock.json"
+    - "yarn.lock"
+
+# Code Analysis Settings
+analysis:
+  # Level of detail for code analysis
+  # Options: "basic", "detailed", "comprehensive"
+  detail_level: "detailed"
+  
+  # Maximum number of files to include in the summary
+  max_files: 5
+  
+  # Maximum number of changes to highlight per file
+  max_changes_per_file: 3
+  
+  # Whether to include code snippets in the summary
+  include_snippets: true
+  
+  # Maximum length of code snippets
+  max_snippet_length: 100
+
+# Comment Settings
+comment:
+  # Template for JIRA comments
+  # Available variables:
+  # {commit_hash}, {commit_message}, {author}, {date}, {summary}, {files_changed}
+  template: |
+    *Code changes pushed by {author} on {date}*
+    
+    *Commit:* {commit_hash}
+    *Message:* {commit_message}
+    
+    h2. Summary of Changes
+    {summary}
+    
+    h3. Files Changed
+    {files_changed}
+    
+    [View full changes|{commit_url}]
+  
+  # Whether to add labels to the JIRA ticket
+  add_labels: true
+  
+  # Labels to add based on file types changed
+  labels:
+    "*.js": "frontend"
+    "*.css": "frontend"
+    "*.py": "backend"
+    "*.java": "backend"
+    "*.sql": "database"
+    "Dockerfile": "devops"
+    "*.yml": "devops"
+
+# Advanced Settings
+advanced:
+  # Whether to use AI for generating summaries (requires OpenAI API key)
+  use_ai_summary: false
+  
+  # OpenAI API settings (if use_ai_summary is true)
+  openai:
+    api_key_env: "OPENAI_API_KEY"  # Name of environment variable with API key
+    model: "gpt-3.5-turbo"
+  
+  # Logging level (debug, info, warning, error)
+  log_level: "info"
+  
+  # Path to store logs
+  log_file: "jira_update.log"
+  
+  # Whether to store credentials securely in system keyring
+  use_keyring: true 
